@@ -1,6 +1,8 @@
 # Image to ascii #
 Python program to turns your image into ascii art.
 
+![Result Image](screenshots/result.png?raw=true "ascii-art")
+
 # Usage #
 
 Make sure you're using Python3.
@@ -19,16 +21,16 @@ python image_to_ascii.py --help
 
 Move your image into images/ folder:
 
-![Input Folder](screenshots\input-folder.png?raw=true "Images Folder")
+![Input Folder](screenshots/input-folder.png?raw=true "Images Folder")
 
 After running <code style="color: gold">python image_to_ascii.py simpson.png</code>
 
 
-![Output Folder](screenshots\output-folder.png?raw=true "Output Folder")
+![Output Folder](screenshots/output-folder.png?raw=true "Output Folder")
 
 Result:
 
-![Result Image](screenshots\result.png?raw=true "ascii-art")
+![Result Image](screenshots/result.png?raw=true "ascii-art")
 
 # Getting Started #
 
