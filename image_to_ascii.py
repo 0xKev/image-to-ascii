@@ -1,14 +1,15 @@
 # image to ascii generator
 from PIL import Image, ImageOps
+import sys, os
 
 
 OUTPUT_DIR = "output\\"
 SIZE = (100, 100)
 INPUT_DIR = "images\\" 
 
-def save_ascii_text(ascii_output: list) -> None:
+def save_ascii_text(ascii_output: list, name: str) -> None:
     """
-    Save the ASCII output to a text file.
+    Save the ASCII output to a text file. Increments filename if file exists.
 
     Args:
         ascii_output (list): The ASCII output to be saved.
@@ -16,9 +17,19 @@ def save_ascii_text(ascii_output: list) -> None:
     Returns:
         None
     """
-    with open(f"{OUTPUT_DIR}ascii_output.txt", "w") as txt_file:
+    file_index = 1
+    file_name = f"{OUTPUT_DIR}{name}_ascii_output.txt" # initialized in case txt file doesn't exist
+
+    # if txt file exists, increment the file name by one and save new txt file
+    while os.path.exists(file_name):
+        file_name = f"{OUTPUT_DIR}{name}_ascii_output{file_index}.txt"
+        file_index += 1
+
+    with open(file_name, "w") as txt_file:
         for line in ascii_output:
             txt_file.writelines(line + "\n")
+
+    print(f"ascii output is saved to {file_name}")
 
 def pixels_to_ascii(pixels: list, rows: int) -> None:
     """
@@ -67,29 +78,38 @@ def get_pixel_data(file_name: str) -> tuple[list[int], int]:
         with Image.open(f"{INPUT_DIR}{file_name}") as im:
             im = ImageOps.cover(im, SIZE)
             im_bw = im.convert(mode = "L") # GRAYSCALE SINGLE NUMBER NOT RGB from 0 t0 255
-            im_bw.save(f"{OUTPUT_DIR}out_{file_name}") # no need to save, just saved to check if working
+            #im_bw.save(f"{OUTPUT_DIR}out_{file_name}") # no need to save, just saved to check if working
             
-            pixels = im_bw.getdata()
+            pixels = im_bw.getdata() 
             rows = im_bw.size[0]
 
-            print(f"min: {min(pixels)}") # debug
-            print(f"max: {max(pixels)}") # debug
+            #print(f"min: {min(pixels)}") # debug
+            #print(f"max: {max(pixels)}") # debug
 
             return pixels, rows
         
-    except (FileNotFoundError, TypeError):
-        print("Image not found. Make sure file exists and include the extension.")
-
-
+    except (FileNotFoundError, TypeError) as err:
+        print(err)
+        print("--Make sure to include the extension in image name parameter--")
+        sys.exit(1)
     
 if __name__ == "__main__":
-    file_name = "mona-lisa.jpg" # no need for path, only file name with extension assuming image in images/
-    pixels, n_rows = get_pixel_data(file_name)
+    if len(sys.argv) != 2 or (sys.argv[1] == "-h" or sys.argv[1] == "--help"):
+        print("Put <image_file> in images/ and run the command below")
+        print("<image_file> should be file name and extension. Do not enter full path.\n")
+        print("Usage: python image_to_ascii.py <image_file>\n")
+        print("Example: python image_to_ascii.py simpson.png")
+        sys.exit(1)
+    
+    else:
+        file_name = sys.argv[1]
+        name = file_name.split(".")[0]
 
-    ascii_output = pixels_to_ascii(pixels, n_rows)
-    save_ascii_text(ascii_output) # saves to "ascii_output.txt" in output/
+        pixels, n_rows = get_pixel_data(file_name)
+        ascii_output = pixels_to_ascii(pixels, n_rows)
 
-    print(ascii_output)
+        print(ascii_output)
+        
+        save_ascii_text(ascii_output, name) # saves to "ascii_output.txt" in output/
 
-    print("---Main function run completed---")
-
+        
