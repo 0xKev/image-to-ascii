@@ -48,7 +48,7 @@ Result:
 ## Installation ##
 1. Clone the repo
 ```
-git clone https://github.com/0xKev/image_to_ascii.py
+git clone https://github.com/0xKev/image-to-ascii.git
 ```
 2. Move into image-to-ascii directory
 ```
